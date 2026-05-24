@@ -1,0 +1,52 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import ipywidgets as widgets\n",
+    "from IPython.display import display\n",
+    "\n",
+    "display_box = widgets.Text(placeholder='0', disabled=True, layout=widgets.Layout(width='265px'))\n",
+    "current_expression = \"\"\n",
+    "\n",
+    "def on_button_click(b):\n",
+    "    global current_expression\n",
+    "    button_value = b.description\n",
+    "    if button_value == 'C':\n",
+    "        current_expression = \"\"\n",
+    "        display_box.value = \"\"\n",
+    "    elif button_value == '=':\n",
+    "        try:\n",
+    "            result = eval(current_expression)\n",
+    "            display_box.value = str(result)\n",
+    "            current_expression = str(result)\n",
+    "        except:\n",
+    "            display_box.value = \"Error\"\n",
+    "            current_expression = \"\"\n",
+    "    else:\n",
+    "        current_expression += button_value\n",
+    "        display_box.value = current_expression\n",
+    "\n",
+    "button_labels = [['7', '8', '9', '/'], ['4', '5', '6', '*'], ['1', '2', '3', '-'], ['C', '0', '=', '+']]\n",
+    "grid_rows = []\n",
+    "for row in button_labels:\n",
+    "    row_buttons = []\n",
+    "    for label in row:\n",
+    "        button_style = 'warning' if label in ['/', '*', '-', '+', '=', 'C'] else ''\n",
+    "        btn = widgets.Button(description=label, button_style=button_style, layout=widgets.Layout(width='60px', height='50px'))\n",
+    "        btn.on_click(on_button_click)\n",
+    "        row_buttons.append(btn)\n",
+    "    grid_rows.append(widgets.HBox(row_buttons))\n",
+    "\n",
+    "calculator_ui = widgets.VBox([display_box] + grid_rows)\n",
+    "display(calculator_ui)"
+   ]
+  }
+ ],
+ "metadata": {},
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
